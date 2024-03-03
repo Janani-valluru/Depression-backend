@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const blogRoutes = require("./routes/blogs");
 const userRoutes = require("./routes/user");
 const cors = require("cors");
+const testRoutes = require("./routes/test");
+const errorMiddleware = require("./middleware/errorMiddleware");
+
 // express app
 const app = express();
 
@@ -26,6 +29,12 @@ app.use((req, res, next) => {
 // routes
 app.use("/api/blogs", blogRoutes);
 app.use("/api/user", userRoutes);
+
+// Routes
+app.use("/api/tests", testRoutes);
+
+// Error middleware
+app.use(errorMiddleware);
 
 app.get("/", (req, res) => {
   res.send("hello world");
