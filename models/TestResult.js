@@ -5,6 +5,10 @@ const testResultSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  type_id: {
+    type: Number,
+    required: true,
+  },
   username: {
     type: String,
     required: true,

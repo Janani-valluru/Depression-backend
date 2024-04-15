@@ -1,21 +1,41 @@
+// controllers/testController.js
 const TestResult = require("../models/TestResult");
 
-async function saveTestResult(req, res) {
+exports.saveTestResult = async (req, res) => {
   try {
-    const { score, username, title } = req.body;
-    console.log(req.body);
-    const result = new TestResult({ score, username, title });
+    const { score, username, title, type_id } = req.body;
+    const result = new TestResult({ score, username, title, type_id });
     await result.save();
     res.json({ success: true });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: "Internal Server Error" });
   }
-}
-async function GetTestResult(req, res) {
-  const results = await TestResult.find();
-  console.log(results);
-  res.json(results);
-}
+};
 
-module.exports = { saveTestResult, GetTestResult };
+exports.getAllTestResults = async (req, res) => {
+  try {
+    let results;
+
+    if (req.query && req.query.username != null) {
+      results = await TestResult.find({ username: req.query.username });
+    } else {
+      results = await TestResult.find({});
+    }
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+exports.getTestResultsByUser = async (req, res) => {
+  try {
+    const { username } = req.query;
+    const results = await TestResult.find({ username });
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};

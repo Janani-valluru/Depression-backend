@@ -29,6 +29,11 @@ const signupUser = async (req, res) => {
   const { email, password, name } = req.body;
 
   try {
+    const existingUser = await User.findOne({ name });
+    if (existingUser) {
+      return res.status(400).json({ error: "Username already exists" });
+    }
+
     const user = await User.signup(email, password, name);
 
     // create a token

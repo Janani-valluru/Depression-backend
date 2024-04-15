@@ -20,9 +20,15 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 */
 
-router.post("/", testController.saveTestResult);
-router.get("/", testController.GetTestResult);
+// routes/test.js
 
+router.get("/user", testController.getTestResultsByUser);
+
+module.exports = router;
+router.post("/", testController.saveTestResult);
+router.get("/", testController.getAllTestResults);
+router.get("/user", testController.getTestResultsByUser);
 module.exports = router;

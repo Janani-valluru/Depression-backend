@@ -10,6 +10,7 @@ const errorMiddleware = require("./middleware/errorMiddleware");
 const blogRoutes = require("./routes/blogs");
 const userRoutes = require("./routes/user");
 const testRoutes = require("./routes/test");
+const dashboardRoutes = require("./routes/dashboard");
 
 // Initialize Express app
 const app = express();
@@ -46,30 +47,9 @@ app.use((req, res, next) => {
 app.use("/api/blogs", blogRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/tests", testRoutes);
-
-// Proxy requests to generate signed embedding URL for Metabase dashboard
-app.get("/generate-embed-url", (req, res) => {
-  const METABASE_SITE_URL = "http://localhost:3000";
-  const METABASE_SECRET_KEY =
-    "c067e0fb5e14a4bc5d619ce24e579cc59b2f1a87c0282c33c348cd5e75ea5541";
-  const payload = {
-    resource: { dashboard: "1-mindwave" }, // Replace '1' with your actual dashboard ID
-    params: {},
-    exp: Math.round(Date.now() / 1000) + 600, // 10 minute expiration
-  };
-  const token = jwt.sign(payload, METABASE_SECRET_KEY);
-  const iframeUrl = `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=true&titled=true`;
-  res.json({ iframeUrl });
-});
+app.use("/api/dashboard", dashboardRoutes);
 
 // Proxy requests to Metabase Docker through Node.js server
-app.use(
-  "/metabase",
-  createProxyMiddleware({
-    target: "http://localhost:3000",
-    changeOrigin: true,
-  })
-);
 
 // Default route
 app.get("/", (req, res) => {
