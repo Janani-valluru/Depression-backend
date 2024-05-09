@@ -3,9 +3,14 @@ const mongoose = require("mongoose");
 
 // get all blogs
 const getBlogs = async (req, res) => {
-  const blogs = await Blog.find({}).sort({ createdAt: -1 });
-
-  res.status(200).json(blogs);
+  try {
+    const blogs = await Blog.find({}).sort({ createdAt: -1 });
+    console.log(blogs); // Log retrieved blogs
+    res.status(200).json(blogs);
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // get a single blog
